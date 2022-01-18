@@ -1,11 +1,13 @@
 from typing import List
 import pandas as pd
 
-from .IngestorInterface import IngestorInterface
-from .QuoteModel import QuoteModel
+from QuoteEngine.IngestorInterface import IngestorInterface
+from QuoteEngine.QuoteModel import QuoteModel
 
 
 class CSVIngestor(IngestorInterface):
+    support_extensions = ['csv']
+
     @classmethod
     def parse(cls, path: str) -> List[QuoteModel]:
         if not cls.can_ingest(path):
