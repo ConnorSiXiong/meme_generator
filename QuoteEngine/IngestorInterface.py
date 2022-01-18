@@ -8,11 +8,11 @@ class IngestorInterface(ABC):
     allowed_file_extensions = []
 
     @classmethod
-    def can_ingest(cls, path) -> bool:
+    def can_ingest(cls, path: str) -> bool:
         return path.split('.')[-1] in cls.allowed_file_extensions
 
     @classmethod
     @abstractmethod
-    def parse(cls, path) -> List[QuoteModel]:
+    def parse(cls, path: str) -> List[QuoteModel]:
         pass
 
