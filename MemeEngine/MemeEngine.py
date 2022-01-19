@@ -20,7 +20,7 @@ class MemeEngine(MemeEngineInterface):
 
     @staticmethod
     def assign_font():
-        font_dir = './_data/fonts'
+        font_dir = './fonts'
         font_path = random.choice(dir_walk(font_dir))
         return ImageFont.truetype(font_path, size=20, encoding='utf-8')
 
