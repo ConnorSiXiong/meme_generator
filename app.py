@@ -51,14 +51,9 @@ def meme_rand():
     # Use the random python standard library class to:
     # 1. select a random image from imgs array
     # 2. select a random quote from the quotes array
-    print('hahah2')
     img = random.choice(imgs)
     quote = random.choice(quotes)
-    print(img)
-    print(quote.body)
-    print(quote.author)
     path = meme.make_meme(img, quote.body, quote.author)
-    print('hhhhhh')
     return render_template('meme.html', path=path)
 
 

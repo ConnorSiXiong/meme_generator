@@ -7,39 +7,39 @@ from .MemeEngineInterface import MemeEngineInterface
 
 
 class MemeEngine(MemeEngineInterface):
-
     @staticmethod
     def load_img(path):
         return Image.open(path)
 
     @staticmethod
-    def resize_img(img, width=500):
+    def resize_img(img, width=800):
         """
         Note:
         img = img.resize(300, 300) => img = img.resize((300,300))
         """
         w, h = img.size
         ratio = width / w
-        return img.resize((int(width), int(h * ratio), Image.NEAREST))
+        return img.resize((int(width), int(h * ratio)), Image.NEAREST)
 
     @staticmethod
     def assign_font():
         font_dir = './fonts'
         font_path = random.choice(dir_walk(font_dir))
-        return ImageFont.truetype(font_path, size=20, encoding='utf-8')
+        return ImageFont.truetype(font_path, size=30, encoding='utf-8')
 
-    def synthesis_new_img(self, image, text):
+    def synthesis_new_img(self, image, text, author):
         draw = ImageDraw.Draw(image)
         w, h = image.size
 
         color = generate_color()
-
+        sentence = text + ' - ' + author
+        print(sentence)
         font = self.assign_font()
 
         draw.text(
-            (w / 16, h / 8),
-            text=text,
-            fill=(random.randint(0, 255), 0, 0),
+            (w / 16, h / 1.3),
+            sentence,
+            fill=color,
             font=font
         )
 
@@ -57,9 +57,8 @@ class MemeEngine(MemeEngineInterface):
             self.can_ingest(img_path)
             img = self.load_img(img_path)
             img = self.resize_img(img)
-            text = f"{text} - {author}"
-            new_img = self.synthesis_new_img(img, text)
+            new_img = self.synthesis_new_img(img, text, author)
             return self.save_file(new_img)
         except Exception as e:
-            print('aaa')
+            print('make_meme error.')
             print(e)
