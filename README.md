@@ -29,4 +29,4 @@ Werkzeug==2.0.2
 ```
 
 # What is the app looks like?
-<img src="https://github.com/AlexSiXiong/udacity_intermediate_python_nanodegree2/blob/main/dog_demo.gif" width="400" height="790">
+<img src="https://github.com/AlexSiXiong/udacity_intermediate_python_nanodegree2/blob/main/dog_demo.gif" width="800" height="800">
