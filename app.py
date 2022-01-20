@@ -1,11 +1,10 @@
+"""The main entrance of the Flask app."""
 import random
 import os
 import requests
 from flask import Flask, render_template, abort, request
 
-# @TODO Import your Ingestor and MemeEngine classes
 from MemeEngine.MemeEngine import MemeEngine
-from QuoteEngine.QuoteModel import QuoteModel
 from QuoteEngine.IngestorManager import IngestorManager
 
 app = Flask(__name__)
@@ -21,37 +20,33 @@ def setup():
                    './_data/DogQuotes/DogQuotesPDF.pdf',
                    './_data/DogQuotes/DogQuotesCSV.csv']
 
-    # TODO: Use the Ingestor class to parse all files in the
     # quote_files variable
-    quotes = []
+    quotes_arr = []
 
     for quote_file in quote_files:
-        quotes.extend(IngestorManager.parse(quote_file))
-
+        quotes_arr.extend(IngestorManager.parse(quote_file))
 
     images_path = "./_data/photos/dog/"
-
-    # TODO: Use the pythons standard library os class to find all
     # images within the images images_path directory
-    imgs = []
+    images_arr = []
     for file in os.listdir(images_path):
         if file.endswith(".jpg"):
-            imgs.append(os.path.join(images_path, file))
+            images_arr.append(os.path.join(images_path, file))
 
-    return quotes, imgs
+    return quotes_arr, images_arr
 
 
-quotes, imgs = setup()
+quotes, images = setup()
+
 
 @app.route('/')
 def meme_rand():
     """ Generate a random meme """
 
-    # @TODO:
     # Use the random python standard library class to:
-    # 1. select a random image from imgs array
+    # 1. select a random image from image array
     # 2. select a random quote from the quotes array
-    img = random.choice(imgs)
+    img = random.choice(images)
     quote = random.choice(quotes)
     path = meme.make_meme(img, quote.body, quote.author)
     return render_template('meme.html', path=path)
@@ -62,46 +57,50 @@ def meme_form():
     """ User input for meme information """
     return render_template('meme_form.html')
 
-class CreateTemp:
+
+class BufferImage:
     """Temporarily create a file with a rnadom name in your chosen directory."""
 
-    def __init__(self, dir='tmp'):
+    def __init__(self, directory='_temp'):
         """Save down the temp file and location."""
         self.file = None
-        self.dir = dir
+        self.dir = directory
 
-    def mkfile(self, extension):
+    def create_dir(self):
         """Make a temporary file which will soon be deleted."""
         if not os.path.isdir(self.dir):
             os.mkdir(self.dir)
-        file = f'./{self.dir}/{random.randint(0,1000000)}.{extension}'
+        file = f'./{self.dir}/{random.randint(100)}.jpg'
         self.file = file
         return file
 
-    def rmfile(self):
+    def remove_temp_file(self):
         """Remove the file you've made."""
         if self.file:
             os.remove(self.file)
 
-@ app.route('/create', methods = ['POST'])
+
+@app.route('/create', methods=['POST'])
 def meme_post():
     """Create a user defined meme."""
-    print('hahah')
-    image_url=request.form.get('image_url')
-    print('image_url', image_url)
-    body=request.form.get('body')
-    print('body',body)
-    author=request.form.get('author')
-    print('author',author)
-    req=requests.get(image_url)
-    if not req:
-        abort(404, description = 'Unable to download an image from the supplied URL.')
-    tmp=CreateTemp()
-    file_name=tmp.mkfile('jpg')
-    open(file_name, 'wb').write(req.content)
-    path=meme.make_meme(file_name, body, author)
-    tmp.rmfile()
-    return render_template('meme.html', path = path)
+
+    image_url = request.form.get('image_url')
+    body = request.form.get('body')
+    author = request.form.get('author')
+
+    response_image = requests.get(image_url)
+    if not response_image:
+        abort(404, description='Unable to download an image from the supplied URL.')
+
+    temp_image = BufferImage()
+    file_name = temp_image.create_dir()
+    open(file_name, 'wb').write(response_image.content)
+
+    # make meme
+    path = meme.make_meme(file_name, body, author)
+
+    temp_image.remove_temp_file()
+    return render_template('meme.html', path=path)
 
 
 if __name__ == "__main__":

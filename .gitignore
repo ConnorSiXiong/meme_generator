@@ -3,3 +3,4 @@
 *.DS_Store
 *.zip
 *.gz
+__pycache__/
