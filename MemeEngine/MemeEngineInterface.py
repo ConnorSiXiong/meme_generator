@@ -6,7 +6,7 @@ class MemeEngineInterface(ABC):
     def __init__(self, output_dir):
         dir_existence_checker(output_dir)
         self.output_dir = output_dir
-        self.support_format = ['jpg', 'jpeg', 'png']
+        self.support_format = ['jpg']
 
     def can_ingest(self, path: str):
         if not path.split('.')[-1] in self.support_format:

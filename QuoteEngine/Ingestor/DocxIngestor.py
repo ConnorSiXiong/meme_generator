@@ -6,7 +6,7 @@ from QuoteEngine.QuoteModel import QuoteModel
 
 
 class DocxIngestor(IngestorInterface):
-    support_extensions = ['docx', 'doc']
+    support_extensions = ['docx']
 
     @classmethod
     def parse(cls, path: str) -> List[QuoteModel]:

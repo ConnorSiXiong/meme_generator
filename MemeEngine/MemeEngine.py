@@ -14,9 +14,13 @@ class MemeEngine(MemeEngineInterface):
 
     @staticmethod
     def resize_img(img, width=500):
+        """
+        Note:
+        img = img.resize(300, 300) => img = img.resize((300,300))
+        """
         w, h = img.size
         ratio = width / w
-        return img.resize(width, int(h * ratio), Image.NEAREST)
+        return img.resize((int(width), int(h * ratio), Image.NEAREST))
 
     @staticmethod
     def assign_font():
@@ -28,13 +32,14 @@ class MemeEngine(MemeEngineInterface):
         draw = ImageDraw.Draw(image)
         w, h = image.size
 
-        color = (generate_color())
+        color = generate_color()
+
         font = self.assign_font()
 
         draw.text(
             (w / 16, h / 8),
             text=text,
-            fill=color,
+            fill=(random.randint(0, 255), 0, 0),
             font=font
         )
 
@@ -56,4 +61,5 @@ class MemeEngine(MemeEngineInterface):
             new_img = self.synthesis_new_img(img, text)
             return self.save_file(new_img)
         except Exception as e:
+            print('aaa')
             print(e)

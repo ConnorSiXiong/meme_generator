@@ -13,4 +13,4 @@ def dir_walk(path):
 
 
 def generate_color():
-    return random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
+    return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))

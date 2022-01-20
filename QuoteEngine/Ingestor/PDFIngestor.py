@@ -8,29 +8,33 @@ from QuoteEngine.QuoteModel import QuoteModel
 
 
 class PDFIngestor(IngestorInterface):
-    allowed_extensions = ['pdf']
+    support_extensions = ['pdf']
 
     @classmethod
     def parse(cls, path: str) -> List[QuoteModel]:
         if not cls.can_ingest(path):
             raise Exception('Cannot Ingest Exception')
 
-        temp = f'./_data/{str(time.time())[:10]}.txt'
-        subprocess.call(['pdftotext', '-layout', path, temp])
+        text_file = f'./_data/{str(time.time())[:10]}.txt'
 
+        with open(text_file, "a") as f:
+            f.close()
+        cmd = f"./pdftotext -layout -nopgbrk {path} {text_file}"
+        subprocess.call(cmd, shell=True, stderr=subprocess.STDOUT)
         res = []
 
         try:
-            with open(temp, 'r') as f:
+            with open(text_file, 'r') as f:
+
                 for line in f.readlines():
                     line = line.strip('\n\r').strip()
                     if len(line) > 0:
                         body, author = line.split(' - ')
                         res.append(QuoteModel(body, author))
+                f.close()
         except Exception:
             raise Exception("PDF Parsing Failed.")
-        finally:
-            f.close()
 
-        os.remove(temp)
+
+        os.remove(text_file)
         return res
