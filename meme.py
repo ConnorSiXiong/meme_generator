@@ -1,21 +1,26 @@
+"""The quotes and images are loaded here.
+
+User can also write quote and load images.
+"""
+import argparse
 import os
 import random
-import argparse
 
 from MemeEngine.MemeEngine import MemeEngine
-from QuoteEngine.QuoteModel import QuoteModel
 from QuoteEngine.IngestorManager import IngestorManager
+from QuoteEngine.QuoteModel import QuoteModel
+
+
+class InputLengthException(TypeError):
+    """Customize exception handles with user CLI inputs."""
 
 
 def generate_meme(path=None, body=None, author=None):
-    """ Generate a meme given an path and a quote """
-    img = None
-    quote = None
-
+    """Generate a meme given an path and a quote."""
     if path is None:
         images = "./_data/photos/dog/"
         imgs = []
-        for root, dirs, files in os.walk(images):
+        for root, _, files in os.walk(images):
             imgs = [os.path.join(root, name) for name in files]
 
         img = random.choice(imgs)
@@ -33,8 +38,16 @@ def generate_meme(path=None, body=None, author=None):
 
         quote = random.choice(quotes)
     else:
-        if author is None:
-            raise Exception('Author Required if Body is Used')
+        try:
+            if author is None:
+                raise InputLengthException('Author is missing')
+            if len(author) > 20:
+                raise Exception('The length of author is too long.')
+            if len(body) > 100:
+                raise Exception('The length of the text is too long.')
+        except InputLengthException as e:
+            print(e.args)
+
         quote = QuoteModel(body, author)
 
     meme = MemeEngine('./tmp')
@@ -43,7 +56,7 @@ def generate_meme(path=None, body=None, author=None):
 
 
 def make_args():
-    """Create an ArgumentParser
+    """Create an ArgumentParser.
 
     path - path to an image file
     body - quote body to add to the image
@@ -55,19 +68,19 @@ def make_args():
     parser.add_argument(
         "--path",
         type=str,
-        help="path for saving the meme generated.",
+        help="The path for saving the meme generated.",
         default=None
     )
     parser.add_argument(
         "--body",
         type=str,
-        help="The main text to be put on the image",
+        help="The text of the quote",
         default=None
     )
     parser.add_argument(
         "--author",
         type=str,
-        help="The author of the main text to be put on the image",
+        help="The author of the quote.",
         default=None
     )
     return parser.parse_args()
