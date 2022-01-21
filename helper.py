@@ -34,7 +34,7 @@ def warp_long_text(text):
     if len(text) > 50:
         wrapper = textwrap.TextWrapper(width=30)
         dedent_text = textwrap.dedent(text=text)
-        wrapper_text = wrapper.fill(text=dedent_text)
+        wrapper_text = wrapper.fill(text=dedent_text).rjust(4, ' ')
         print(wrapper_text)
         return wrapper_text
     else:

@@ -12,6 +12,10 @@ app = Flask(__name__)
 meme = MemeEngine('./static')
 
 
+class CustomizeImagePathException(ValueError):
+    """Customize exception handles with customized quote."""
+
+
 def setup():
     """Load all resources."""
     quote_files = ['./_data/DogQuotes/DogQuotesTXT.txt',
@@ -87,10 +91,13 @@ def meme_post():
     body = request.form.get('body')
     author = request.form.get('author')
 
-    response_image = requests.get(image_url)
-    if not response_image:
-        abort(404,
-              description='Unable to download an image from the supplied URL.')
+    try:
+        response_image = requests.get(image_url)
+        if not response_image:
+            abort(404, description='Unable to download an image from the supplied URL.')
+    except CustomizeImagePathException:
+        print("Invalid file type entered")
+        return render_template('meme_error.html')
 
     temp_image = BufferImage()
     file_name = temp_image.create_dir()
