@@ -28,5 +28,21 @@ Werkzeug==2.0.2
 
 ```
 
+# How to start it?
+## 1. Web App
+```python app.py```
+This will be deployed on AWS later.
+
+## 2. Command Line
+```
+usage: python meme.py [-h] [--body BODY] [--author AUTHOR] [--path PATH]
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --body BODY      The text of the quote
+  --author AUTHOR  The author of the quote
+  --path PATH      The path for saving the meme generated.
+```
+
 # What is the app looks like?
 <img src="https://github.com/AlexSiXiong/udacity_intermediate_python_nanodegree2/blob/main/dog_demo.gif" width="800" height="800">
