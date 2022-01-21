@@ -13,8 +13,7 @@ meme = MemeEngine('./static')
 
 
 def setup():
-    """ Load all resources """
-
+    """Load all resources."""
     quote_files = ['./_data/DogQuotes/DogQuotesTXT.txt',
                    './_data/DogQuotes/DogQuotesDOCX.docx',
                    './_data/DogQuotes/DogQuotesPDF.pdf',
@@ -41,11 +40,12 @@ quotes, images = setup()
 
 @app.route('/')
 def meme_rand():
-    """ Generate a random meme """
+    """Generate a random meme.
 
-    # Use the random python standard library class to:
-    # 1. select a random image from image array
-    # 2. select a random quote from the quotes array
+    Use the random python standard library class to:
+    1. select a random image from image array
+    2. select a random quote from the quotes array
+    """
     img = random.choice(images)
     quote = random.choice(quotes)
     path = meme.make_meme(img, quote.body, quote.author)
@@ -54,12 +54,12 @@ def meme_rand():
 
 @app.route('/create', methods=['GET'])
 def meme_form():
-    """ User input for meme information """
+    """User input for meme information."""
     return render_template('meme_form.html')
 
 
 class BufferImage:
-    """Temporarily create a file with a rnadom name in your chosen directory."""
+    """Temporarily create a file with a random name in your chosen directory."""
 
     def __init__(self, directory='_temp'):
         """Save down the temp file and location."""
@@ -70,7 +70,7 @@ class BufferImage:
         """Make a temporary file which will soon be deleted."""
         if not os.path.isdir(self.dir):
             os.mkdir(self.dir)
-        file = f'./{self.dir}/{random.randint(100)}.jpg'
+        file = f'./{self.dir}/{random.randint(0, 100)}.jpg'
         self.file = file
         return file
 
@@ -83,14 +83,14 @@ class BufferImage:
 @app.route('/create', methods=['POST'])
 def meme_post():
     """Create a user defined meme."""
-
     image_url = request.form.get('image_url')
     body = request.form.get('body')
     author = request.form.get('author')
 
     response_image = requests.get(image_url)
     if not response_image:
-        abort(404, description='Unable to download an image from the supplied URL.')
+        abort(404,
+              description='Unable to download an image from the supplied URL.')
 
     temp_image = BufferImage()
     file_name = temp_image.create_dir()
