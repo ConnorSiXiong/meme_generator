@@ -1,9 +1,8 @@
 # Meme Generator
 
-The goal of this project is to build a "meme generator".
+This is a "meme generator".
 
-A multimedia application to dynamically generate memes, including an image with an overlaid quote. It’s not that simple though! Your content team spent countless hours writing quotes in a variety of filetypes. You could manually copy and paste these quotes into one standard format.
-
+A multimedia application to dynamically generate memes, including an image with an overlaid quote. 
 # Installation
 
 Install the libraries via ```pip install -r requirements.txt```
